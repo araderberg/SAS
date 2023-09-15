@@ -1,0 +1,45 @@
+%macro dataload(sheet);
+proc compare
+base=work.&sheet
+compare=import.&sheet;
+run;
+%mend dataload;
+%dataload(Forms);
+%dataload(Fields);
+%dataload(Folders);
+%dataload(DataDictionaries);
+%dataload(DataDictionaryEntries)
+%dataload(Matrices);
+%dataload(Derivations);
+%dataload(DerivationSteps);
+%dataload(Checks);
+%dataload(CheckSteps);
+%dataload(CheckActions);
+%dataload(CustomFunctions);
+
+%macro dataload(sheet);
+
+FILENAME REFFILE '//path/M-DRIVE/projects-sas/project/proto9999/filename_26MAR2019_AR_PROD_PRE.xls';
+
+PROC IMPORT out=import.&sheet
+    DATAFILE=REFFILE
+	DBMS=XLS replace;
+	sheet = "&sheet";
+	GETNAMES=YES;
+RUN;
+%mend dataload;
+%dataload(Forms);
+%dataload(Fields);
+%dataload(Folders);
+%dataload(DataDictionaries);
+%dataload(DataDictionaryEntries)
+%dataload(Matrices);
+%dataload(Derivations);
+%dataload(DerivationSteps);
+%dataload(Checks);
+%dataload(CheckSteps);
+%dataload(CheckActions);
+%dataload(CustomFunctions);
+/*PROC CONTENTS DATA=WORK.IMPORT; RUN;*/
+
+
