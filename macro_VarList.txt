@@ -1,0 +1,31 @@
+
+%macro varlist(dsn);
+
+  %local dsid dsn rc nvars i varlist;
+
+  %let dsid=%sysfunc(open(&dsn,is));
+
+  %* Print error mssg and exit if dataset did not open;
+  %if &dsid EQ 0 %then %do;
+    %put ERROR: (VARLIST) Dataset &dsn not opened due to the following reason: %sysfunc(sysmsg());
+    %goto exit;
+  %end;
+
+  %let nvars=%sysfunc(attrn(&dsid,nvars));
+  %* Print error mssg and exit if no variables are found;
+  %if &nvars LT 1 %then %do;
+    %put ERROR: (VARLIST) No variables in dataset &dsn;
+    %goto cleanup;
+  %end;
+  %do i=1 %to &nvars;
+    %if %length(&varlist) EQ 0 %then %let varlist=%sysfunc(varname(&dsid,&i));
+    %else %let varlist=&varlist %sysfunc(varname(&dsid,&i));
+  %end;
+
+  &varlist
+
+%cleanup:
+  %let rc=%sysfunc(close(&dsid));
+%exit:
+
+%mend varlist;
