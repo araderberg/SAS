@@ -1,0 +1,29 @@
+PROC IMPORT OUT= WORK.TEST 
+            DATAFILE= "H:\Labs\Local Lab Training\Hematology Data Review.xls"
+            DBMS=EXCEL2000 REPLACE;
+     GETNAMES=YES;
+RUN;
+
+
+data duplicate;
+set test;
+
+proc sort data=duplicate;
+by pt__no__ coll__date__ lab__test__code;
+run;
+
+
+data duplicate_sort;
+set duplicate;
+by pt__no__ coll__date__ lab__test__code;
+if first.lab__test__code ne last.lab__test__code;
+run;
+
+
+proc sort data=duplicate_sort;
+by pt__no__ coll__date__ lab__test__code;
+run;
+
+
+proc print data=duplicate_sort;
+run;
