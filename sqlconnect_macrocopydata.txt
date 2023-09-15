@@ -1,0 +1,56 @@
+options mprint ps=60 ls=132 errorabend nofmterr compress=YES;
+%let protdir=KNG59306;          * Your Protocol Name *;
+%let protocol=KNG59306;         * Your Protocol Name *;
+%let quote=%str('KNG59306');    * Your Protocol Name *;
+%Let UserName=xxxxxxxx;         * Your Clintrial Username *;
+%Let Password=xxxxxxxxx;        * Your Clintrial Password *;
+
+libname datasets "disk$&protocol.:[&protocol..datasets.data_table_mpr]";
+libname database "disk$&protocol.:[&protocol..views.data_table]";
+
+proc sql;
+connect to oracle (user=&UserName pass=&Password);
+  create table datasets.tracking as
+    select *
+  from connection to oracle  
+    (select pxlpid1a pid1a
+           ,pxlpag1a pag1a
+           ,pxlpagsuf1n pagsuf1n
+           ,pxlvis1a vis1a
+           ,pxlstt1n stt1n
+      from pxltrack.&protocol._pag
+  );
+  disconnect from oracle;
+quit;
+
+%macro copydata(dset,keep=NULL);
+
+data datasets.&dset;
+  set database.&dset(keep=pid1a pag1a vis1a pagsuf1n
+  %if &keep ne NULL %then %do;
+  &keep
+  %end;
+  )
+  ;
+run;
+
+%mend copydata;
+
+%copydata(AE);
+%copydata(AE_CMT);
+%copydata(CARDHIST);
+%copydata(CONMED);
+%copydata(CRITERIA);
+%copydata(DEMOG);
+%copydata(ECG,keep=pagsec ecg_sig ecg_csig dt_ecg ecg_nd ecg_res dt_res);
+%copydata(ENDPT);
+%copydata(INVSIG);
+%copydata(LABEL);
+%copydata(LABRPT);
+%copydata(MEDHIST);
+%copydata(PE);
+%copydata(PREGTEST);
+%copydata(RANDOM);
+%copydata(STDYTERM);
+%copydata(VITAL);
+
