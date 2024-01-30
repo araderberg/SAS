@@ -1,9 +1,9 @@
+![Screenshot](sas_analysis.png)
+
 # SAS
 👋 Hi, I’m @araderberg
 
 👀 I’m interested in collaborating in projects using SAS or any clinical research application.
-
-🌱 I’m currently learning APIs using Python, Pandas, Juniper...
 
 💞️ I’m looking to collaborate on clinical research / data management projects.
 
